@@ -1,0 +1,344 @@
+/* Reset & Base System Configuration */
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+  background-color: #f5f6f7;
+  color: #111827;
+  padding-bottom: 3rem;
+  font-size: 16px;
+}
+
+/* Authentic Ticketmaster Brand Header */
+.tm-header {
+  background-color: #026cdf;
+  color: #ffffff;
+  padding: 0.75rem 1rem;
+  position: sticky;
+  top: 0;
+  z-index: 100;
+}
+
+.tm-header-container {
+  max-width: 1100px;
+  margin: 0 auto;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.tm-logo {
+  font-size: 1.35rem;
+  font-weight: 900;
+  letter-spacing: -0.05em;
+  font-style: italic;
+}
+
+.tm-timer-badge {
+  display: flex;
+  align-items: center;
+  gap: 0.375rem;
+  background-color: rgba(255, 255, 255, 0.15);
+  padding: 0.35rem 0.75rem;
+  border-radius: 4px;
+}
+
+.tm-timer-text {
+  font-family: monospace;
+  font-weight: 700;
+  font-size: 0.85rem;
+}
+
+/* Main Two-Column View Grid */
+.checkout-container {
+  max-width: 1100px;
+  margin: 0 auto;
+  padding: 1rem 0.75rem;
+  display: flex;
+  flex-direction: column;
+  gap: 1.25rem;
+}
+
+@media (min-width: 1024px) {
+  .checkout-container {
+    display: grid;
+    grid-template-columns: 7fr 5fr;
+    gap: 1.5rem;
+    align-items: start;
+  }
+}
+
+/* Event Info Details Bar */
+.event-info-bar {
+  background-color: #002c8a;
+  color: #ffffff;
+  padding: 1rem;
+  border-radius: 8px;
+  margin-bottom: 1rem;
+}
+
+.event-breadcrumbs {
+  font-size: 0.7rem;
+  color: #93c5fd;
+  text-transform: uppercase;
+  margin-bottom: 0.5rem;
+  letter-spacing: 0.05em;
+}
+
+.event-title-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+}
+
+.event-main-title {
+  font-size: 1.15rem;
+  font-weight: 700;
+}
+
+.more-info-btn {
+  background: none;
+  border: 1px solid #ffffff;
+  color: #ffffff;
+  padding: 0.25rem 0.5rem;
+  font-size: 0.7rem;
+  border-radius: 4px;
+  font-weight: 600;
+}
+
+.event-meta-text {
+  font-size: 0.8rem;
+  color: #e0f2fe;
+  margin-top: 0.25rem;
+}
+
+.event-important-note {
+  background-color: rgba(0, 0, 0, 0.2);
+  padding: 0.5rem;
+  font-size: 0.7rem;
+  border-radius: 4px;
+  margin-top: 0.75rem;
+  border-left: 3px solid #ffc439;
+}
+
+/* Interactive Map Box Layout */
+.stadium-map-box {
+  background-color: #ffffff;
+  border: 1px solid #e5e7eb;
+  border-radius: 8px;
+  padding: 1rem;
+  text-align: center;
+  margin-bottom: 1.25rem;
+}
+
+.map-placeholder-img {
+  max-width: 100%;
+  height: auto;
+  max-height: 220px;
+  margin: 0 auto;
+  display: block;
+}
+
+/* White Dashboard Payment Components */
+.payment-panel {
+  background-color: #ffffff;
+  padding: 1.25rem;
+  border-radius: 8px;
+  border: 1px solid #d1d5db;
+}
+
+.tab-navigation {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 0.5rem;
+  margin-bottom: 1.25rem;
+}
+
+.tab-button {
+  background-color: #f3f4f6;
+  border: 1px solid #d1d5db;
+  padding: 0.75rem;
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: #4b5563;
+  border-radius: 6px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+}
+
+.tab-button.active {
+  background-color: #026cdf;
+  color: #ffffff;
+  border-color: #026cdf;
+}
+
+/* Forms & Inputs */
+.form-group {
+  margin-bottom: 1rem;
+}
+
+.form-label {
+  display: block;
+  font-size: 0.75rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  color: #374151;
+  margin-bottom: 0.375rem;
+}
+
+.form-input, .form-select {
+  width: 100%;
+  padding: 0.75rem;
+  border: 1px solid #bcbfc3;
+  border-radius: 6px;
+  font-size: 0.95rem;
+}
+
+.stripe-input-container {
+  padding: 0.75rem;
+  border: 1px solid #bcbfc3;
+  border-radius: 6px;
+  background-color: #ffffff;
+}
+
+/* Google Pay Express Button */
+.gpay-express-btn {
+  background-color: #000000;
+  color: #ffffff;
+  width: 100%;
+  padding: 0.85rem;
+  border-radius: 6px;
+  font-weight: 700;
+  font-size: 1rem;
+  border: none;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+}
+
+/* Standard Action CTA Buttons */
+.submit-btn {
+  width: 100%;
+  background-color: #25a844; /* Clean green matching your primary CTA screenshots */
+  color: #ffffff;
+  font-weight: 700;
+  padding: 1rem;
+  border-radius: 6px;
+  font-size: 1rem;
+  border: none;
+  cursor: pointer;
+  text-transform: uppercase;
+  letter-spacing: 0.02em;
+}
+
+.submit-btn:hover { background-color: #1e8737; }
+.submit-btn:disabled { background-color: #9ca3af; cursor: not-allowed; }
+
+/* Alerts */
+.alert-box {
+  padding: 0.75rem;
+  font-size: 0.75rem;
+  border-radius: 6px;
+  margin-bottom: 1rem;
+  line-height: 1.4;
+}
+.alert-blue { background-color: #eff6ff; color: #1e40af; border: 1px solid #bfdbfe; }
+.alert-orange { background-color: #fff7ed; color: #9a3412; border: 1px solid #fed7aa; }
+
+/* Dynamic Crypto Grid Selector */
+.crypto-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 0.375rem;
+}
+
+.crypto-card {
+  border: 1px solid #d1d5db;
+  padding: 0.625rem 0.25rem;
+  border-radius: 6px;
+  text-align: center;
+  cursor: pointer;
+  background-color: #fff;
+  font-size: 0.8rem;
+}
+.crypto-card.active {
+  border-color: #ea580c;
+  background-color: #fff7ed;
+  color: #c2410c;
+  font-weight: 700;
+}
+
+/* Right Side Ticket Summary Mock UI Card */
+.ticket-card {
+  background-color: #ffffff;
+  border-radius: 8px;
+  border: 1px solid #e5e7eb;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+}
+
+.ticket-header-row {
+  padding: 1.25rem;
+  border-bottom: 1px solid #f1f5f9;
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+}
+
+.ticket-seat-title {
+  font-size: 1.15rem;
+  font-weight: 800;
+  color: #111827;
+}
+
+.ticket-price-display {
+  font-size: 1.25rem;
+  font-weight: 900;
+  color: #111827;
+  text-align: right;
+}
+
+.badge-purple {
+  background-color: #faf5ff;
+  color: #6b21a8;
+  border: 1px solid #e9d5ff;
+  padding: 0.25rem 0.5rem;
+  border-radius: 4px;
+  font-size: 0.7rem;
+  font-weight: 600;
+  display: inline-block;
+  margin-top: 0.375rem;
+}
+
+.ticket-info-list {
+  padding: 1.25rem;
+  border-bottom: 1px solid #f1f5f9;
+  display: flex;
+  flex-direction: column;
+  gap: 1.25rem;
+}
+
+.info-item-row {
+  display: flex;
+  gap: 0.875rem;
+}
+
+.info-item-heading {
+  font-size: 0.85rem;
+  font-weight: 700;
+  color: #1f2937;
+}
+
+.info-item-subtext {
+  font-size: 0.8rem;
+  color: #4b5563;
+  margin-top: 0.125rem;
+}
