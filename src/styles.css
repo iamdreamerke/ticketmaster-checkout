@@ -1,4 +1,4 @@
-/* Pixel-Perfect Reset & Fonts */
+/* Reset & Base System Configuration */
 * {
   box-sizing: border-box;
   margin: 0;
@@ -7,430 +7,338 @@
 
 body {
   font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
-  background-color: #ffffff;
-  color: #000000;
-  padding-bottom: 90px; /* Space for the sticky bottom mobile action bar */
-  font-size: 14px;
+  background-color: #f5f6f7;
+  color: #111827;
+  padding-bottom: 3rem;
+  font-size: 16px;
 }
 
-/* Authentic TM Navbar Layout */
-.tm-navbar {
-  background-color: #0150a0; /* True Ticketmaster deep brand blue */
-  color: #ffffff;
-  padding: 10px 16px;
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  height: 52px;
-}
-
-.tm-nav-left {
-  display: flex;
-  align-items: center;
-  gap: 12px;
-}
-
-.tm-menu-burger {
-  display: flex;
-  flex-direction: column;
-  gap: 4px;
-  cursor: pointer;
-}
-.tm-menu-burger span {
-  width: 18px;
-  height: 2px;
-  background-color: #ffffff;
-}
-
-.tm-brand-logo {
-  font-size: 1.4rem;
-  font-weight: 800;
-  letter-spacing: -0.04em;
-  font-style: italic;
-  font-family: sans-serif;
-}
-
-.tm-nav-right {
-  display: flex;
-  align-items: center;
-  gap: 14px;
-}
-
-.tm-country-pill {
-  display: flex;
-  align-items: center;
-  gap: 6px;
-  font-size: 0.85rem;
-  font-weight: 600;
-}
-
-.tm-flag-circle {
-  width: 18px;
-  height: 18px;
-  border-radius: 50%;
-  overflow: hidden;
-  background-color: #fff;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
-
-/* Event Context Meta Header */
-.event-meta-context {
-  background-color: #011f51; /* Dark midnight metadata wrap */
-  color: #ffffff;
-  padding: 12px 16px;
-}
-
-.tm-breadcrumbs {
-  font-size: 0.75rem;
-  color: #9cbbf1;
-  margin-bottom: 4px;
-}
-
-.event-headline-row {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-}
-
-.event-headline-row h1 {
-  font-size: 1.1rem;
-  font-weight: 700;
-}
-
-.tm-more-info {
-  background: none;
-  border: 1px solid #ffffff;
-  color: #ffffff;
-  padding: 2px 8px;
-  font-size: 0.7rem;
-  border-radius: 4px;
-  font-weight: 600;
-}
-
-.event-sub-details {
-  font-size: 0.8rem;
-  color: #d1e2ff;
-  margin-top: 2px;
-}
-
-.event-alert-banner {
-  font-size: 0.75rem;
-  color: #ffffff;
-  margin-top: 8px;
-  line-height: 1.3;
-}
-.event-alert-banner span {
-  color: #9cbbf1;
-  text-decoration: underline;
-  cursor: pointer;
-}
-
-/* Interactive Map Canvas Wrapper Box */
-.stadium-canvas-card {
-  background-color: #ffffff;
-  border-bottom: 1px solid #e2e8f0;
-  padding: 16px;
-  text-align: center;
-}
-
-.stadium-map-vector {
-  width: 100%;
-  max-width: 260px;
-  height: 140px;
-  background-color: #f1f5f9;
-  border-radius: 50%;
-  margin: 0 auto;
-  border: 1px solid #e2e8f0;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  position: relative;
-  overflow: hidden;
-}
-
-.map-active-sector {
-  width: 45px;
-  height: 25px;
+/* Authentic Ticketmaster Brand Header */
+.tm-header {
   background-color: #026cdf;
   color: #ffffff;
-  font-size: 0.65rem;
-  font-weight: 700;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  border-radius: 3px;
-  position: absolute;
-  top: 15px;
-  right: 45px;
+  padding: 0.75rem 1rem;
+  position: sticky;
+  top: 0;
+  z-index: 100;
 }
 
-.stadium-stage-node {
-  width: 50px;
-  height: 30px;
-  background-color: #111827;
-  color: #fff;
-  font-size: 0.6rem;
-  font-weight: 800;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  position: absolute;
-  left: 20px;
-  top: 55px;
-  transform: rotate(-90deg);
-}
-
-/* Filter Controls Toolbar Row */
-.tm-filter-toolbar {
-  padding: 12px 16px;
-  border-bottom: 1px solid #e2e8f0;
-  display: flex;
-  gap: 8px;
-}
-
-.toolbar-select, .toolbar-btn {
-  background-color: #ffffff;
-  border: 1px solid #0150a0;
-  color: #0150a0;
-  font-weight: 600;
-  font-size: 0.85rem;
-  padding: 8px 16px;
-  border-radius: 20px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 6px;
-  cursor: pointer;
-}
-.toolbar-select {
-  width: 45%;
-  outline: none;
-}
-.toolbar-btn {
-  width: 27.5%;
-}
-
-.all-prices-note {
-  font-size: 0.75rem;
-  color: #64748b;
-  padding: 12px 16px 4px 16px;
-  text-align: center;
-}
-
-/* Main Form Work Surface Area Grid */
-.checkout-view-grid {
+.tm-header-container {
   max-width: 1100px;
   margin: 0 auto;
-  padding: 12px 16px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.tm-logo {
+  font-size: 1.35rem;
+  font-weight: 900;
+  letter-spacing: -0.05em;
+  font-style: italic;
+}
+
+.tm-timer-badge {
+  display: flex;
+  align-items: center;
+  gap: 0.375rem;
+  background-color: rgba(255, 255, 255, 0.15);
+  padding: 0.35rem 0.75rem;
+  border-radius: 4px;
+}
+
+.tm-timer-text {
+  font-family: monospace;
+  font-weight: 700;
+  font-size: 0.85rem;
+}
+
+/* Main Two-Column View Grid */
+.checkout-container {
+  max-width: 1100px;
+  margin: 0 auto;
+  padding: 1rem 0.75rem;
   display: flex;
   flex-direction: column;
-  gap: 16px;
+  gap: 1.25rem;
 }
 
 @media (min-width: 1024px) {
-  .checkout-view-grid {
+  .checkout-container {
     display: grid;
-    grid-template-columns: 6.5fr 5.5fr;
-    gap: 24px;
+    grid-template-columns: 7fr 5fr;
+    gap: 1.5rem;
     align-items: start;
   }
 }
 
-/* Authentic Dual-Card Row Layouts */
-.seat-header-row {
+/* Event Info Details Bar */
+.event-info-bar {
+  background-color: #002c8a;
+  color: #ffffff;
+  padding: 1rem;
+  border-radius: 8px;
+  margin-bottom: 1rem;
+}
+
+.event-breadcrumbs {
+  font-size: 0.7rem;
+  color: #93c5fd;
+  text-transform: uppercase;
+  margin-bottom: 0.5rem;
+  letter-spacing: 0.05em;
+}
+
+.event-title-row {
   display: flex;
   justify-content: space-between;
   align-items: flex-start;
-  margin-bottom: 12px;
 }
 
-.seat-title-text {
-  font-size: 1.25rem;
+.event-main-title {
+  font-size: 1.15rem;
   font-weight: 700;
-  color: #000000;
 }
 
-.seat-price-display {
-  font-size: 1.25rem;
-  font-weight: 700;
-  color: #026cdf;
-  text-align: right;
-}
-
-.verified-resale-label {
-  font-size: 0.85rem;
-  color: #71717a;
-  margin-top: 2px;
-}
-
-/* Top Split Card Component Frame */
-.tm-ticket-split-card {
-  border: 1px solid #e4e4e7;
-  border-radius: 6px;
-  background-color: #ffffff;
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  margin-bottom: 12px;
-  box-shadow: 0 1px 2px rgba(0,0,0,0.02);
-}
-
-.split-card-pane {
-  padding: 16px;
-  display: flex;
-  gap: 12px;
-  align-items: flex-start;
-}
-.split-card-pane:first-child {
-  border-right: 1px solid #f4f4f5;
-}
-
-.pane-heading {
-  font-size: 0.85rem;
-  font-weight: 600;
-  color: #000000;
-  margin-bottom: 4px;
-}
-.pane-subtext {
-  font-size: 0.75rem;
-  color: #71717a;
-  line-height: 1.3;
-}
-
-/* Bottom Unified Descriptive Detail List Card */
-.tm-ticket-details-card {
-  border: 1px solid #e4e4e7;
-  border-radius: 6px;
-  background-color: #ffffff;
-  box-shadow: 0 1px 2px rgba(0,0,0,0.02);
-}
-
-.details-card-row {
-  padding: 16px;
-  display: flex;
-  gap: 16px;
-  align-items: flex-start;
-}
-.details-card-row:not(:last-child) {
-  border-bottom: 1px solid #f4f4f5;
-}
-
-.details-row-body h4 {
-  font-size: 0.9rem;
-  font-weight: 700;
-  color: #000000;
-}
-.details-row-body p {
-  font-size: 0.8rem;
-  color: #52525b;
-  margin-top: 2px;
-  line-height: 1.3;
-}
-
-/* Payment Gateway Section Blocks */
-.checkout-form-panel {
-  border-top: 1px dashed #d4d4d8;
-  margin-top: 16px;
-  padding-top: 16px;
-}
-
-.tab-pill-box {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 8px;
-  margin-bottom: 16px;
-}
-
-.tab-pill {
-  background-color: #f4f4f5;
-  border: 1px solid #e4e4e7;
-  padding: 10px;
+.more-info-btn {
+  background: none;
+  border: 1px solid #ffffff;
+  color: #ffffff;
+  padding: 0.25rem 0.5rem;
+  font-size: 0.7rem;
   border-radius: 4px;
-  font-size: 0.8rem;
   font-weight: 600;
-  color: #52525b;
+}
+
+.event-meta-text {
+  font-size: 0.8rem;
+  color: #e0f2fe;
+  margin-top: 0.25rem;
+}
+
+.event-important-note {
+  background-color: rgba(0, 0, 0, 0.2);
+  padding: 0.5rem;
+  font-size: 0.7rem;
+  border-radius: 4px;
+  margin-top: 0.75rem;
+  border-left: 3px solid #ffc439;
+}
+
+/* Interactive Map Box Layout */
+.stadium-map-box {
+  background-color: #ffffff;
+  border: 1px solid #e5e7eb;
+  border-radius: 8px;
+  padding: 1rem;
+  text-align: center;
+  margin-bottom: 1.25rem;
+}
+
+.map-placeholder-img {
+  max-width: 100%;
+  height: auto;
+  max-height: 220px;
+  margin: 0 auto;
+  display: block;
+}
+
+/* White Dashboard Payment Components */
+.payment-panel {
+  background-color: #ffffff;
+  padding: 1.25rem;
+  border-radius: 8px;
+  border: 1px solid #d1d5db;
+}
+
+.tab-navigation {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 0.5rem;
+  margin-bottom: 1.25rem;
+}
+
+.tab-button {
+  background-color: #f3f4f6;
+  border: 1px solid #d1d5db;
+  padding: 0.75rem;
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: #4b5563;
+  border-radius: 6px;
   cursor: pointer;
   display: flex;
   align-items: center;
   justify-content: center;
-  gap: 6px;
+  gap: 0.5rem;
 }
-.tab-pill.active {
-  background-color: #0150a0;
+
+.tab-button.active {
+  background-color: #026cdf;
   color: #ffffff;
-  border-color: #0150a0;
+  border-color: #026cdf;
 }
 
-.form-field-group {
-  margin-bottom: 12px;
+/* Forms & Inputs */
+.form-group {
+  margin-bottom: 1rem;
 }
 
-.field-label {
+.form-label {
   display: block;
-  font-size: 0.7rem;
+  font-size: 0.75rem;
   font-weight: 700;
   text-transform: uppercase;
-  color: #27272a;
-  margin-bottom: 4px;
+  color: #374151;
+  margin-bottom: 0.375rem;
 }
 
-.input-element, .select-element {
+.form-input, .form-select {
   width: 100%;
-  padding: 10px;
-  border: 1px solid #d4d4d8;
-  border-radius: 4px;
-  font-size: 0.9rem;
-  outline: none;
+  padding: 0.75rem;
+  border: 1px solid #bcbfc3;
+  border-radius: 6px;
+  font-size: 0.95rem;
 }
 
-.stripe-iframe-box {
-  padding: 11px 10px;
-  border: 1px solid #d4d4d8;
-  border-radius: 4px;
-  background-color: #fff;
-}
-
-/* Sticky Touch Overlay Action Footer Bar */
-.sticky-action-bar {
-  position: fixed;
-  bottom: 0;
-  left: 0;
-  right: 0;
+.stripe-input-container {
+  padding: 0.75rem;
+  border: 1px solid #bcbfc3;
+  border-radius: 6px;
   background-color: #ffffff;
-  border-top: 1px solid #e4e4e7;
-  padding: 12px 16px;
-  z-index: 500;
-  display: flex;
-  flex-direction: column;
-  gap: 8px;
 }
 
-.action-bar-top-row {
+/* Google Pay Express Button */
+.gpay-express-btn {
+  background-color: #000000;
+  color: #ffffff;
+  width: 100%;
+  padding: 0.85rem;
+  border-radius: 6px;
+  font-weight: 700;
+  font-size: 1rem;
+  border: none;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+}
+
+/* Standard Action CTA Buttons */
+.submit-btn {
+  width: 100%;
+  background-color: #25a844; /* Clean green matching your primary CTA screenshots */
+  color: #ffffff;
+  font-weight: 700;
+  padding: 1rem;
+  border-radius: 6px;
+  font-size: 1rem;
+  border: none;
+  cursor: pointer;
+  text-transform: uppercase;
+  letter-spacing: 0.02em;
+}
+
+.submit-btn:hover { background-color: #1e8737; }
+.submit-btn:disabled { background-color: #9ca3af; cursor: not-allowed; }
+
+/* Alerts */
+.alert-box {
+  padding: 0.75rem;
+  font-size: 0.75rem;
+  border-radius: 6px;
+  margin-bottom: 1rem;
+  line-height: 1.4;
+}
+.alert-blue { background-color: #eff6ff; color: #1e40af; border: 1px solid #bfdbfe; }
+.alert-orange { background-color: #fff7ed; color: #9a3412; border: 1px solid #fed7aa; }
+
+/* Dynamic Crypto Grid Selector */
+.crypto-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 0.375rem;
+}
+
+.crypto-card {
+  border: 1px solid #d1d5db;
+  padding: 0.625rem 0.25rem;
+  border-radius: 6px;
+  text-align: center;
+  cursor: pointer;
+  background-color: #fff;
+  font-size: 0.8rem;
+}
+.crypto-card.active {
+  border-color: #ea580c;
+  background-color: #fff7ed;
+  color: #c2410c;
+  font-weight: 700;
+}
+
+/* Right Side Ticket Summary Mock UI Card */
+.ticket-card {
+  background-color: #ffffff;
+  border-radius: 8px;
+  border: 1px solid #e5e7eb;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+}
+
+.ticket-header-row {
+  padding: 1.25rem;
+  border-bottom: 1px solid #f1f5f9;
   display: flex;
   justify-content: space-between;
-  align-items: center;
-  font-size: 0.9rem;
+  align-items: flex-start;
 }
 
-.action-total-price {
-  font-size: 1.2rem;
-  font-weight: 700;
-  color: #026cdf;
+.ticket-seat-title {
+  font-size: 1.15rem;
+  font-weight: 800;
+  color: #111827;
 }
 
-.tm-primary-cta {
-  width: 100%;
-  background-color: #008244; /* Official high-fidelity Ticketmaster green color action node */
-  color: #ffffff;
-  font-size: 1rem;
-  font-weight: 700;
-  padding: 12px;
-  border: none;
+.ticket-price-display {
+  font-size: 1.25rem;
+  font-weight: 900;
+  color: #111827;
+  text-align: right;
+}
+
+.badge-purple {
+  background-color: #faf5ff;
+  color: #6b21a8;
+  border: 1px solid #e9d5ff;
+  padding: 0.25rem 0.5rem;
   border-radius: 4px;
-  cursor: pointer;
-  text-align: center;
+  font-size: 0.7rem;
+  font-weight: 600;
+  display: inline-block;
+  margin-top: 0.375rem;
 }
-.tm-primary-cta:hover { background-color: #006635; }
-.tm-primary-cta:disabled { background-color: #a1a1aa; cursor: not-allowed; }
+
+.ticket-info-list {
+  padding: 1.25rem;
+  border-bottom: 1px solid #f1f5f9;
+  display: flex;
+  flex-direction: column;
+  gap: 1.25rem;
+}
+
+.info-item-row {
+  display: flex;
+  gap: 0.875rem;
+}
+
+.info-item-heading {
+  font-size: 0.85rem;
+  font-weight: 700;
+  color: #1f2937;
+}
+
+.info-item-subtext {
+  font-size: 0.8rem;
+  color: #4b5563;
+  margin-top: 0.125rem;
+}

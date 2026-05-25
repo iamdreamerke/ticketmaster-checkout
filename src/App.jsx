@@ -16,13 +16,11 @@ import {
   Clock,
   Copy,
   CheckCircle,
-  HelpCircle,
-  Lock,
-  Sliders,
-  ChevronRight
+  MessageSquare
 } from 'lucide-react';
 import './styles.css';
 
+// Initialize sandbox publishable instance pointer
 const stripePromise = loadStripe('pk_test_51Otl6BC9RURXTbJp36L8mO8SjI2KzZ6R8KxlbXwW9E2VpL0M3F4K5J6N7P8Q9R0S1T2U3V4W5X6Y7Z8A9B0C1D2E3F4');
 
 const DEMO_WALLETS = {
@@ -39,82 +37,104 @@ const CRYPTO_PRICES = {
   SOL: '1.845'
 };
 
-// SUB-COMPONENT: Live Sandbox Stripe Form Node Handler
-function InnerStripeForm({ isProcessing, setIsProcessing, cardHolder, setCardHolder, postalCode, setPostalCode, handleOrderComplete }) {
+// SUB-COMPONENT: Stripe Sandbox Form
+function SandboxCardForm({ isProcessing, setIsProcessing, timeLeft, cardHolder, setCardHolder, postalCode, setPostalCode }) {
   const stripe = useStripe();
   const elements = useElements();
 
-  const handleCardPayment = async (e) => {
+  const handleCardSubmit = async (e) => {
     e.preventDefault();
     if (!stripe || !elements) return;
 
     setIsProcessing(true);
     try {
       const cardElement = elements.getElement(CardElement);
+      
+      // Execute genuine sandbox transaction token allocation handshake
       const { paymentMethod, error: stripeError } = await stripe.createPaymentMethod({
         type: 'card',
         card: cardElement,
-        billing_details: { name: cardHolder, address: { postal_code: postalCode } }
+        billing_details: {
+          name: cardHolder,
+          address: { postal_code: postalCode }
+        }
       });
 
       if (stripeError) throw stripeError;
 
+      // Log transaction reference straight into your Supabase orders schema row
       const { data, error: dbError } = await supabase
         .from('orders')
-        .insert([{
-          payment_method: 'stripe_sandbox_card',
-          crypto_tx_hash: paymentMethod.id,
-          amount_paid_pence: 21500,
-          status: 'completed'
-        }])
+        .insert([
+          {
+            payment_method: 'stripe_sandbox_card',
+            crypto_tx_hash: paymentMethod.id, // Securely logging generated 'pm_...' payload reference
+            amount_paid_pence: 21500,
+            status: 'completed'
+          }
+        ])
         .select();
 
       if (dbError) throw dbError;
-      handleOrderComplete(data[0].id, 'Credit/Debit Card');
+      alert(`💳 SANDBOX TRANSACTION SUCCESSFUL!\nToken Handshake mapped in Supabase: ${data[0].id}\nNo real money was moved.`);
+      
+      setCardHolder('');
+      setPostalCode('');
       cardElement.clear();
+
     } catch (err) {
-      alert(`Payment Denied: ${err.message}`);
+      alert(`Stripe Sandbox Error: ${err.message}`);
     } finally {
       setIsProcessing(false);
     }
   };
 
   return (
-    <form id="stripe-form-node" onSubmit={handleCardPayment}>
-      <div className="form-field-group">
-        <label className="field-label">Cardholder Name</label>
-        <input type="text" value={cardHolder} onChange={(e) => setCardHolder(e.target.value)} placeholder="Wayne Wol" className="input-element" required />
+    <form onSubmit={handleCardSubmit}>
+      <div className="alert-box alert-blue">
+        <ShieldCheck size={16} style={{ marginRight: '0.5rem', float: 'left' }} />
+        <span>Sandbox Mode Enabled. You can safely type real card formats or mock numbers for testing.</span>
+        <div style={{ clear: 'both' }}></div>
+      </div>
+      
+      <div className="form-group">
+        <label className="form-label">Name on Card</label>
+        <input type="text" value={cardHolder} onChange={(e) => setCardHolder(e.target.value)} placeholder="Wayne Wol" className="form-input" required />
       </div>
 
-      <div className="form-field-group">
-        <label className="field-label">Card Credentials</label>
-        <div className="stripe-iframe-box">
-          <CardElement options={{ style: { base: { fontSize: '15px', color: '#000000' } } }} />
+      <div className="form-group">
+        <label className="form-label">Card Credentials</label>
+        <div className="stripe-input-container">
+          <CardElement options={{ style: { base: { fontSize: '16px', color: '#111827' } } }} />
         </div>
       </div>
 
-      <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '8px' }}>
-        <div className="form-field-group">
-          <label className="field-label">Country</label>
-          <select className="select-element">
+      <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '0.5rem' }}>
+        <div className="form-group">
+          <label className="form-label">Country</label>
+          <select className="form-select">
             <option>Kenya</option>
             <option>United States</option>
             <option>United Kingdom</option>
           </select>
         </div>
-        <div className="form-field-group">
-          <label className="field-label">Postal Code</label>
-          <input type="text" value={postalCode} onChange={(e) => setPostalCode(e.target.value)} placeholder="00100" className="input-element" required />
+        <div className="form-group">
+          <label className="form-label">Postal Code</label>
+          <input type="text" value={postalCode} onChange={(e) => setPostalCode(e.target.value)} placeholder="00100" className="form-input" required />
         </div>
       </div>
+
+      <button type="submit" disabled={isProcessing || timeLeft <= 0 || !stripe} className="submit-btn" style={{ marginTop: '1rem' }}>
+        {isProcessing ? 'Authorizing Sandbox Rails...' : 'Get Tickets'}
+      </button>
     </form>
   );
 }
 
-// MAIN LAYOUT EXPORT COMPONENT
+// MAIN PLATFORM INSTANCE
 export default function App() {
   const [activeTab, setActiveTab] = useState('card');
-  const [timeLeft, setTimeLeft] = useState(465); // Synchronized ~7:45 time remaining clock string
+  const [timeLeft, setTimeLeft] = useState(480);
   const [cryptoTimeLeft, setCryptoTimeLeft] = useState(900);
   const [cryptoCoin, setCryptoCoin] = useState('USDC');
   const [copied, setCopied] = useState(false);
@@ -147,30 +167,50 @@ export default function App() {
     setTimeout(() => setCopied(false), 2000);
   };
 
-  const handleOrderComplete = (dbRowId, strategyName) => {
-    alert(`🎉 ORDER CONCLUDED VIA ${strategyName.toUpperCase()}!\nCloud Reference ID generated in Supabase: ${dbRowId}`);
-    setCardHolder('');
-    setPostalCode('');
+  const handleGooglePayClick = async () => {
+    setIsProcessing(true);
+    try {
+      const { data, error } = await supabase
+        .from('orders')
+        .insert([
+          {
+            payment_method: 'google_pay_sandbox',
+            crypto_tx_hash: `SANDBOX_G_PAY_TOKEN_${Math.random().toString(36).substring(5).toUpperCase()}`,
+            amount_paid_pence: 21500,
+            status: 'completed'
+          }
+        ])
+        .select();
+
+      if (error) throw error;
+      alert(`🤖 GOOGLE PAY EXPRESS Handshake Logged in Supabase: ${data[0].id}`);
+    } catch (err) {
+      alert(`Database Error: ${err.message}`);
+    } finally {
+      setIsProcessing(false);
+    }
   };
 
   const handleCryptoSubmit = async (e) => {
     e.preventDefault();
     if (!txHash.trim()) return;
-
+    
     setIsProcessing(true);
     try {
       const { data, error } = await supabase
         .from('orders')
-        .insert([{
-          payment_method: `crypto_${cryptoCoin}`,
-          crypto_tx_hash: txHash,
-          amount_paid_pence: 21500,
-          status: 'pending'
-        }])
+        .insert([
+          {
+            payment_method: `crypto_${cryptoCoin}`,
+            crypto_tx_hash: txHash,
+            amount_paid_pence: 21500,
+            status: 'pending'
+          }
+        ])
         .select();
 
       if (error) throw error;
-      handleOrderComplete(data[0].id, `Crypto Wallet (${cryptoCoin})`);
+      alert(`🎉 Crypto receipt logged into cloud Supabase schema: ${data[0].id}`);
       setTxHash('');
     } catch (err) {
       alert(`Database Error: ${err.message}`);
@@ -181,200 +221,191 @@ export default function App() {
 
   return (
     <div>
-      {/* Authentic Branding Header */}
-      <header className="tm-navbar">
-        <div className="tm-nav-left">
-          <div className="tm-menu-burger">
-            <span></span><span></span><span></span>
+      <header className="tm-header">
+        <div className="tm-header-container">
+          <div className="tm-logo-group">
+            <span className="tm-logo">ticketmaster</span>
           </div>
-          <span className="tm-brand-logo">ticketmaster</span>
-        </div>
-        <div className="tm-nav-right">
-          <div className="tm-country-pill">
-            <div className="tm-flag-circle">🇬🇧</div>
-            <span>UK</span>
+          <div className="tm-timer-badge">
+            <Clock size={14} color="#ffffff" style={{ marginRight: '0.25rem' }} />
+            <span className="tm-timer-text">{formatTime(timeLeft)} time remaining</span>
           </div>
-          <User size={20} color="#ffffff" />
         </div>
       </header>
 
-      {/* Top Banner Navigation Row matching image_2a3d40.jpg specs */}
-      <div className="event-meta-context">
-        <div className="tm-breadcrumbs">Home / Concert Tickets / Rock / Taylor Swift</div>
-        <div className="event-title-row">
-          <h1 className="event-main-title">Taylor Swift | The Eras Tour</h1>
-          <button type="button" className="tm-more-info">More Info</button>
-        </div>
-        <p className="event-sub-details">Sat • Aug 17 • 6:30 PM • Wembley Stadium, London</p>
-        <p className="event-important-note">
-          <strong>Important Event Info:</strong> No tickets will be released prior to 72 hours before the event. <span>more</span>
-        </p>
-      </div>
-
-      {/* Interactive Stadium Map Box Component View */}
-      <div className="stadium-canvas-card">
-        <button className="toolbar-btn" style={{ borderRadius: '4px', border: '1px solid #bcbfc3', color: '#000', fontSize: '0.75rem', padding: '6px 12px', margin: '0 auto 12px auto', display: 'block' }}>
-          Switch to Map
-        </button>
-        <div className="stadium-map-vector">
-          <div className="stadium-stage-node">STAGE</div>
-          <div className="map-active-sector">508</div>
+      {/* Primary Event Summary Bar matching screenshot layout details */}
+      <div style={{ maxWidth: '1100px', margin: '1rem auto 0 auto', padding: '0 0.75rem' }}>
+        <div className="event-info-bar">
+          <div className="event-breadcrumbs">Home / Concert Tickets / Rock / Taylor Swift</div>
+          <div className="event-title-row">
+            <h1 className="event-main-title">Taylor Swift | The Eras Tour</h1>
+            <button type="button" className="more-info-btn">More Info</button>
+          </div>
+          <p className="event-meta-text">Sat • Aug 17 • 6:30 PM • Wembley Stadium, London</p>
+          <div className="event-important-note">
+            <strong>Important Event Info:</strong> No tickets will be released prior to 72 hours before the event.
+          </div>
         </div>
       </div>
 
-      {/* Sub-toolbar Inputs */}
-      <div className="tm-filter-toolbar">
-        <select className="toolbar-select"><option>1 Ticket</option></select>
-        <button className="toolbar-btn"><Lock size={14} /> Codes</button>
-        <button className="toolbar-btn"><Sliders size={14} /> Filters</button>
-      </div>
-      <p className="all-prices-note">All ticket prices include fees for one (1) ticket. Prices may vary based on demand.</p>
-
-      {/* Main Container Work Area */}
-      <main className="checkout-view-grid">
+      <main className="checkout-container">
         
-        {/* LEFT COLUMN INTERFACE */}
+        {/* LEFT COMPONENT ELEMENT ROW */}
         <div>
-          {/* Main Card View: Header Mappings from image_2a3e1e.jpg */}
-          <div className="seat-header-row" style={{ padding: '0 4px' }}>
-            <div>
-              <h2 className="seat-title-text">Sec 508 • Row 20 • Seat 24</h2>
-              <p className="verified-resale-label">Verified Resale Ticket</p>
-            </div>
-            <div className="seat-price-display">
-              <span>£215.00</span>
-              <span style={{ fontSize: '0.75rem', color: '#000', display: 'block', fontWeight: 500, marginTop: '2px' }}>ea <ChevronRight size={14} style={{ display: 'inline', verticalAlign: 'middle' }} /></span>
+          {/* Section Seating Visual representation mapping mapping from screenshots */}
+          <div className="stadium-map-box">
+            <div style={{ textTransform: 'uppercase', fontSize: '0.65rem', fontWeight: '700', color: '#64748b', marginBottom: '0.5rem', textAlign: 'left' }}>Venue Seating Overview</div>
+            {/* Using a structural placeholder representation box to outline Section 508 highlight parameters cleanly */}
+            <div style={{ width: '100%', height: '140px', backgroundColor: '#e2e8f0', borderRadius: '6px', display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', border: '1px solid #cbd5e1' }}>
+              <span style={{ fontSize: '1.25rem', fontWeight: '900', color: '#026cdf' }}>SECTION 508</span>
+              <span style={{ fontSize: '0.7rem', color: '#64748b', marginTop: '0.25rem', fontWeight: '600' }}>Row 20 • Seat 24 Selected</span>
             </div>
           </div>
 
-          {/* SPLIT TICKET CARD COMPONENT */}
-          <div className="tm-ticket-split-card">
-            <div className="split-card-pane">
-              <CreditCard size={20} color="#026cdf" style={{ marginTop: '2px' }} />
-              <div>
-                <h4 className="pane-heading">Standard Ticket</h4>
-                <p className="pane-subtext">1 Ticket</p>
-              </div>
-            </div>
-            <div className="split-card-pane">
-              <Smartphone size={20} color="#026cdf" style={{ marginTop: '2px' }} />
-              <div>
-                <h4 className="pane-heading">Mobile Ticket</h4>
-                <p className="pane-subtext">Scan barcode from your mobile device.</p>
-              </div>
-            </div>
-          </div>
+          <div className="payment-panel">
+            <h2 className="panel-title">
+              <span className="step-number">1</span>
+              Select Payment Method
+            </h2>
 
-          {/* UNIFIED DESCRIPTIVE CARD DETAILS GRID */}
-          <div className="tm-ticket-details-card">
-            <div className="details-card-row">
-              <User size={20} color="#52525b" style={{ marginTop: '2px' }} />
-              <div className="details-row-body">
-                <h4>Single ticket</h4>
-                <p>You'll be seated alone.</p>
-              </div>
+            <div className="tab-navigation">
+              <button type="button" className={`tab-button ${activeTab === 'card' ? 'active' : ''}`} onClick={() => setActiveTab('card')}>
+                <CreditCard size={16} />
+                <span>Card / Google Pay</span>
+              </button>
+              <button type="button" className={`tab-button ${activeTab === 'crypto' ? 'active' : ''}`} onClick={() => setActiveTab('crypto')}>
+                <Bitcoin size={16} />
+                <span>Crypto Wallet</span>
+              </button>
             </div>
 
-            <div className="details-card-row">
-              <ShieldCheck size={20} color="#52525b" style={{ marginTop: '2px' }} />
-              <div className="details-row-body">
-                <div style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
-                  <h4>Verified Resale Ticket</h4>
-                  <HelpCircle size={14} color="#a1a1aa" />
+            {activeTab === 'card' && (
+              <div>
+                <div style={{ marginBottom: '1.5rem', paddingBottom: '1.25rem', borderBottom: '1px dashed #e5e7eb' }}>
+                  <label className="form-label" style={{ marginBottom: '0.5rem' }}>Express Checkout Option</label>
+                  <button type="button" onClick={handleGooglePayClick} className="gpay-express-btn">
+                    <span>Google Pay</span>
+                  </button>
                 </div>
-                <p>This ticket is verified by Ticketmaster. It may be resold once, closer to the event.</p>
-              </div>
-            </div>
-          </div>
 
-          {/* INTEGRATED SECURE EMBED PANEL TRANSITION */}
-          <div className="checkout-form-panel">
-            <div className="tab-pill-box">
-              <div className={`tab-pill ${activeTab === 'card' ? 'active' : ''}`} onClick={() => setActiveTab('card')}>
-                <CreditCard size={14} />
-                <span>Card Sandbox</span>
-              </div>
-              <div className={`tab-pill ${activeTab === 'crypto' ? 'active' : ''}`} onClick={() => setActiveTab('crypto')}>
-                <Bitcoin size={14} />
-                <span>Crypto Balance</span>
-              </div>
-            </div>
+                <div style={{ position: 'relative', textAlign: 'center', margin: '1.5rem 0 1rem 0' }}>
+                  <div style={{ position: 'absolute', top: '50%', left: '0', right: '0', height: '1px', backgroundColor: '#e5e7eb', zIndex: '1' }}></div>
+                  <span style={{ position: 'relative', zIndex: '2', backgroundColor: '#ffffff', padding: '0 0.75rem', fontSize: '0.7rem', color: '#94a3b8', textTransform: 'uppercase', fontWeight: '700', display: 'block', width: 'fit-content', margin: '0 auto' }}>
+                    Or enter card manually
+                  </span>
+                </div>
 
-            {activeTab === 'card' ? (
-              <Elements stripe={stripePromise}>
-                <InnerStripeForm 
-                  isProcessing={isProcessing} 
-                  setIsProcessing={setIsProcessing}
-                  cardHolder={cardHolder}
-                  setCardHolder={setCardHolder}
-                  postalCode={postalCode}
-                  setPostalCode={setPostalCode}
-                  handleOrderComplete={handleOrderComplete}
-                />
-              </Elements>
-            ) : (
-              <form onSubmit={handleCryptoSubmit} style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
-                <div className="alert-box alert-orange" style={{ display: 'flex', justifyContent: 'space-between' }}>
-                  <span>Rate Expiry:</span>
-                  <strong>{formatTime(cryptoTimeLeft)}</strong>
+                <Elements stripe={stripePromise}>
+                  <SandboxCardForm 
+                    isProcessing={isProcessing} 
+                    setIsProcessing={setIsProcessing} 
+                    timeLeft={timeLeft}
+                    cardHolder={cardHolder}
+                    setCardHolder={setCardHolder}
+                    postalCode={postalCode}
+                    setPostalCode={setPostalCode}
+                  />
+                </Elements>
+              </div>
+            )}
+
+            {activeTab === 'crypto' && (
+              <form onSubmit={handleCryptoSubmit} style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
+                <div className="alert-box alert-orange" style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                  <span>⚠️ Exchange Rate Allocation Expiry:</span>
+                  <strong style={{ fontFamily: 'monospace' }}>{formatTime(cryptoTimeLeft)}</strong>
                 </div>
 
                 <div>
+                  <label className="form-label">Select Target Crypto Asset</label>
                   <div className="crypto-grid">
                     {['USDC', 'BTC', 'ETH', 'SOL'].map((coin) => (
-                      <div key={coin} onClick={() => setCryptoCoin(coin)} className={`crypto-card ${cryptoCoin === coin ? 'active' : ''}`}>
+                      <div key={coin} onClick={() => { setCryptoCoin(coin); setCryptoTimeLeft(900); }} className={`crypto-card ${cryptoCoin === coin ? 'active' : ''}`}>
                         <span>{coin}</span>
                       </div>
                     ))}
                   </div>
                 </div>
 
-                <div style={{ backgroundColor: '#f4f4f5', padding: '12px', borderRadius: '4px', textAlign: 'center' }}>
-                  <h2 style={{ fontSize: '1.5rem', fontWeight: 800 }}>{CRYPTO_PRICES[cryptoCoin]} {cryptoCoin}</h2>
+                <div style={{ backgroundColor: '#f8fafc', border: '1px solid #e2e8f0', padding: '0.75rem', borderRadius: '0.5rem', textAlign: 'center' }}>
+                  <span style={{ fontSize: '0.65rem', color: '#64748b', textTransform: 'uppercase', fontWeight: 700 }}>Required Transfer Amount</span>
+                  <h2 style={{ fontSize: '1.75rem', fontWeight: 900, color: '#0f172a', marginTop: '0.125rem' }}>
+                    {CRYPTO_PRICES[cryptoCoin]} <span style={{ fontSize: '1.1rem', fontWeight: 500 }}>{cryptoCoin}</span>
+                  </h2>
                 </div>
 
-                <div className="form-field-group">
-                  <label className="field-label">Destination Address</label>
-                  <div style={{ display: 'flex', gap: '4px' }}>
-                    <input type="text" readOnly value={DEMO_WALLETS[cryptoCoin]} className="input-element" style={{ fontFamily: 'monospace', fontSize: '0.75rem', backgroundColor: '#f4f4f5' }} />
-                    <button type="button" onClick={handleCopyAddress} style={{ backgroundColor: '#0150a0', color: '#fff', border: 'none', padding: '0 12px', borderRadius: '4px' }}>
+                <div>
+                  <label className="form-label">Destination Merchant Wallet Address</label>
+                  <div style={{ display: 'flex', gap: '0.375rem' }}>
+                    <input type="text" readOnly value={DEMO_WALLETS[cryptoCoin]} className="form-input" style={{ fontFamily: 'monospace', fontSize: '0.7rem', backgroundColor: '#f1f5f9', color: '#334155' }} />
+                    <button type="button" onClick={handleCopyAddress} style={{ backgroundColor: '#026cdf', color: 'white', border: 'none', borderRadius: '0.5rem', padding: '0 0.85rem', cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
                       {copied ? <CheckCircle size={14} /> : <Copy size={14} />}
                     </button>
                   </div>
                 </div>
 
-                <div className="form-field-group">
-                  <label className="field-label">Transaction Hash Record</label>
-                  <input type="text" placeholder="Paste signature receipt string..." className="input-element" value={txHash} onChange={(e) => setTxHash(e.target.value)} required />
+                <div className="form-group">
+                  <label className="form-label">On-Chain Transaction Hash Receipt</label>
+                  <input type="text" placeholder="Paste on-chain block receipt signature..." className="form-input" value={txHash} onChange={(e) => setTxHash(e.target.value)} required />
                 </div>
 
-                <button type="submit" disabled={isProcessing} className="tm-primary-cta" style={{ backgroundColor: '#0150a0' }}>
-                  Submit Transaction Verification
+                <button type="submit" disabled={isProcessing || timeLeft <= 0} className="submit-btn" style={{ backgroundColor: '#026cdf' }}>
+                  {isProcessing ? 'Writing to Supabase Instance...' : 'Confirm Transaction Receipt'}
                 </button>
               </form>
             )}
           </div>
         </div>
-      </main>
 
-      {/* Fixed Sticky Action CTA Mobile Dock Container matching screenshot footprints */}
-      <footer className="sticky-action-bar">
-        <div className="action-bar-top-row">
-          <span style={{ fontWeight: 600 }}>1 Ticket</span>
-          <span className="tm-timer-text" style={{ color: '#ef4444' }}>{formatTime(timeLeft)} remaining</span>
-          <span className="action-total-price">£215.00</span>
-        </div>
-        
-        {activeTab === 'card' ? (
-          <button type="submit" form="stripe-form-node" disabled={isProcessing || timeLeft <= 0} className="tm-primary-cta">
-            {isProcessing ? 'Verifying Channel Token...' : 'Get Tickets'}
-          </button>
-        ) : (
-          <div style={{ fontSize: '0.75rem', color: '#71717a', textAlign: 'center', fontWeight: 600, padding: '4px 0' }}>
-            Complete the Crypto form entries directly inside the workspace layout module.
+        {/* RIGHT COLUMN: HIGH-FIDELITY SUMMARY SEAT DETAILS ROW MAP */}
+        <div>
+          <div className="ticket-card">
+            <div className="ticket-header-row">
+              <div>
+                <h3 className="ticket-seat-title">Sec 508 • Row 20 • Seat 24</h3>
+                <span className="badge-purple">Verified Resale Ticket</span>
+              </div>
+              <div className="ticket-price-display">
+                <span>£215.00</span>
+                <span style={{ display: 'block', fontSize: '0.65rem', color: '#64748b', fontWeight: '500', marginTop: '0.125rem' }}>ea</span>
+              </div>
+            </div>
+
+            <div className="ticket-info-list">
+              <div className="info-item-row">
+                <User size={18} color="#4b5563" style={{ flexShrink: 0, marginTop: '0.125rem' }} />
+                <div>
+                  <h4 className="info-item-heading">Single Ticket</h4>
+                  <p className="info-item-subtext">You'll be seated alone.</p>
+                </div>
+              </div>
+
+              <div className="info-item-row">
+                <Smartphone size={18} color="#4b5563" style={{ flexShrink: 0, marginTop: '0.125rem' }} />
+                <div>
+                  <h4 className="info-item-heading">Mobile Ticket</h4>
+                  <p className="info-item-subtext">Scan barcode from your mobile device app.</p>
+                </div>
+              </div>
+
+              <div className="info-item-row">
+                <MessageSquare size={18} color="#4b5563" style={{ flexShrink: 0, marginTop: '0.125rem' }} />
+                <div>
+                  <h4 className="info-item-heading">Notes From Seller</h4>
+                  <p className="info-item-subtext" style={{ fontStyle: 'italic' }}>"Great seat with a clear view of the stage!"</p>
+                </div>
+              </div>
+            </div>
+
+            <div className="price-breakdown" style={{ padding: '1.25rem' }}>
+              <div className="flex-row-space" style={{ color: '#4b5563', fontSize: '0.85rem' }}>
+                <span>1 Ticket</span>
+                <span style={{ fontWeight: '700', color: '#111827' }}>£215.00</span>
+              </div>
+            </div>
           </div>
-        )}
-      </footer>
+        </div>
+      </main>
     </div>
   );
 }
